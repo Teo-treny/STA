@@ -1,9 +1,10 @@
 .vscode/
-AI_Dataset_Capture/
 Asservissement/
 Codes_Fabien/
-Communication_serie
+Communication_serie/
 Serveurs/
-Stagiaire_G1
+Stagiaire_G1/
 Voiture/
 MegaPi/
+
+*tar.gz

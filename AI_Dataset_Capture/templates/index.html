@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Contrôle du Robot</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f3f3f3;
+			text-align: center;
+			padding-top: 20px;
+		}
+
+		#video {
+			border: 2px solid #333;
+			border-radius: 10px;
+			width: 640px;
+			height: 480px;
+		}
+
+		.controls {
+			margin-top: 20px;
+		}
+
+		button {
+			font-size: 18px;
+			padding: 10px 20px;
+			margin: 10px;
+			border: none;
+			border-radius: 8px;
+			background-color: #4CAF50;
+			color: white;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>Contrôle du Robot</h1>
+
+	<img id="video" src="{{ url_for('video_feed') }}" alt="Flux Vidéo">
+
+	<div class="controls">
+		<div>
+			<button onclick="sendCommand('F')">Avancer</button>
+		</div>
+		<div>
+			<button onclick="sendCommand('L')">Gauche</button>
+			<button onclick="sendCommand('S')">Stop</button>
+			<button onclick="sendCommand('R')">Droite</button>
+		</div>
+		<div>
+			<button onclick="sendCommand('B')">Reculer</button>
+		</div>
+		<div>
+			<button onclick="takePhoto()">📸 Prendre une photo</button>
+		</div>
+	</div>
+
+	<script>
+		let keyPressed = false;
+		let i = 0;
+
+		function sendCommand(cmd) {
+			fetch(`/command/${cmd}`, { method: 'POST' });
+		}
+
+		function takePhoto() {
+			fetch(`/photo`, { method: 'POST' })
+				.then(res => res.blob())
+				.then(blob => {
+					const url = URL.createObjectURL(blob);
+					const a = document.createElement('a');
+					a.href = url;
+					a.download = i + ".jpg";
+					i += 1;
+					a.click();
+					URL.revokeObjectURL(url);
+				});
+		}
+
+		document.addEventListener('keydown', function (e) {
+			if (keyPressed) return;
+			keyPressed = true;
+			switch (e.key) {
+				case 'ArrowUp':
+					sendCommand('F');
+					break;
+
+				case 'ArrowDown':
+					sendCommand('B');
+					break;
+
+				case 'ArrowLeft':
+					sendCommand('L');
+					break;
+
+				case 'ArrowRight':
+					sendCommand('R');
+					break;
+			}
+		});
+
+		document.addEventListener('keyup', function(e) {
+			keyPressed=false;
+			sendCommand('S');
+		});
+
+	</script>
+
+</body>
+
+</html>
