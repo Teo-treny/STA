@@ -1,19 +1,7 @@
 # Code MegaPi
 
-Ce code ouvre une communication série et écoute les messages.
-Un message se structure ainsi :
+Ce code ouvre une communication série et écoute les messages envoyés par port série par le RPI.
 
-Trame de début : commande : trame de fin
-La trame de début est arbitraire et est fixé à 0x02. De même pour la trame de fin, 0x03.
-Il y a actuellement 5 messages en place :
-    - 'S' (STOP) : Arrête les moteurs
-    - 'F' (FORWARD) : Fais tourner les moteurs de manière à avancer en ligne droite
-    - 'B' (BACKWARD) : Fais tourner les moteurs de manière à reculer en ligne droite
-    - 'L' (LEFT) : Fais tourner les moteurs de manière à tourner sur soi-même vers la gauche
-    - 'R' (RIGHT) : Fais tourner les moteurs de manière à tourner sur soi-même vers la droite
-
-Exemple :
-    - Octet 1 : 0x02
-    - Octet 2 : 'S'
-    - Octet 3 : 0x03
---> Le robot s'arrête
+# Modifications librairie MeMegaPi.h
+Des modifications ont été apportées à la cette librairie car elle pouvait causer un bug (inclure deux fois la lib dans deux fichiers séparés donnaient une erreur de compilation).
+La modification consiste en la déclaration des variables mePort, encoder_Port, megapi_dc_Port et megaPi_slots dans un fichier MeMegaPiGlobals.cpp et en déclaration externe dans le fichier MeMegaPi.h. Auparavant, la déclaration se faisait directement dans le header, ce qui est une mauvaise pratique.
